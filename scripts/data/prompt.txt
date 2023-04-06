@@ -60,3 +60,5 @@ RESPONSE FORMAT:
 }
 
 Ensure the response can be parsed by Python json.loads
+Ensure the "thoughts" in response must be translated in Korean.
+답변의 "thoughts"는 반드시 한국어로 번역해주세요.
