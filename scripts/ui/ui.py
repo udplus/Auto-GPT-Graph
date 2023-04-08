@@ -12,9 +12,7 @@ from json_parser import fix_and_parse_json
 import traceback
 from ai_config import AIConfig
 
-cfg = Config()
-cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
-cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
+GPT4_MODE = False
 
 def print_to_console(
         title,
@@ -103,6 +101,12 @@ def print_assistant_thoughts(assistant_reply):
 
     return result
 
+cfg = Config()
+if GPT4_MODE:
+    print_to_console("******************** WARNING: GPT-4 MODE Activated! ********************", Fore.LIGHTBLUE_EX, '')
+else: # GPT-3.5
+    cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+    cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
 
 question_style = {
     'bg': 'white',
