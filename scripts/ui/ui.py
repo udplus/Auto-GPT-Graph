@@ -7,7 +7,6 @@ import chat
 from colorama import Fore, Style
 from spinner import Spinner
 import time
-import speak
 from config import Config
 from json_parser import fix_and_parse_json
 import traceback
@@ -125,12 +124,12 @@ class State(pc.State):
     is_thinking = False
     is_started = False
 
-    ai_name: str = '유튜버-GPT'
-    ai_role: str = '유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.'
+    ai_name: str = '기업가-GPT'
+    ai_role: str = '자산 증식을 위한 사업을 자동으로 개발하고 운영한다.'
     ai_goals: list = [
-        '월 광고 수익 200만원 달성',
-        '구독자 수 10만명 달성',
-        '영상 콘텐츠 주제 선정',
+        '기업 총 가치 높이기',
+        '트위터 계정 팔로워 수 증가',
+        '다양한 비즈니스를 자동으로 개발하고 관리하기',
     ]
 
     # Initialize variables
@@ -192,7 +191,7 @@ class State(pc.State):
             print_to_console("SYSTEM: ", Fore.YELLOW, result)
 
             plans = []
-            if reply['plans']:
+            if 'plans' in reply and reply['plans']:
                 plans = [plan.replace('- ', '') for plan in reply['plans']]
 
             self.history = [History(
