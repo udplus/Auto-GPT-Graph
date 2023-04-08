@@ -1,10 +1,8 @@
 import pynecone as pc
-from flask import Flask, render_template
 import json
 import random
 import commands as cmd
 import memory as mem
-import data
 import chat
 from colorama import Fore, Style
 from spinner import Spinner
@@ -12,9 +10,8 @@ import time
 import speak
 from config import Config
 from json_parser import fix_and_parse_json
-from ai_config import AIConfig
 import traceback
-import yaml
+from ai_config import AIConfig
 
 def print_to_console(
         title,
