@@ -125,12 +125,12 @@ class State(pc.State):
     is_thinking = False
     is_started = False
 
-    ai_name: str = '기업가-GPT'
-    ai_role: str = '자산 증식을 위한 사업을 자동으로 개발하고 운영한다.'
+    ai_name: str = '유튜버-GPT'
+    ai_role: str = '유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.'
     ai_goals: list = [
-        '기업 총 가치 높이기',
-        '트위터 계정 팔로워 수 증가',
-        '다양한 비즈니스를 자동으로 개발하고 관리하기',
+        '월 광고 수익 200만원 달성',
+        '구독자 수 10만명 달성',
+        '영상 콘텐츠 주제 선정',
     ]
 
     # Initialize variables
@@ -148,8 +148,6 @@ class State(pc.State):
         self.ai_goals[2] = goal
 
     def think(self):
-        self.is_started = True
-
         self.history = []
         self.full_message_history = []
         self.result = None
@@ -163,61 +161,74 @@ class State(pc.State):
 
         self.cont()
 
-    def cont(self):
+    def starting(self):
+        self.is_started = True
+
+    def processing(self):
         self.is_thinking = True
-        with Spinner("Thinking... "):
-            assistant_reply = chat.chat_with_ai(
-                self.prompt,
-                self.user_input,
-                self.full_message_history,
-                mem.permanent_memory,
-                cfg.fast_token_limit)
 
-        # Print Assistant thoughts
-        reply = print_assistant_thoughts(assistant_reply)
+    def cont(self):
+        try:
+            with Spinner("Thinking... "):
+                assistant_reply = chat.chat_with_ai(
+                    self.prompt,
+                    self.user_input,
+                    self.full_message_history,
+                    mem.permanent_memory,
+                    cfg.fast_token_limit)
 
-        # Get command name and arguments
-        command_name, arguments = cmd.get_command(assistant_reply)
-        result = f"Command {command_name} returned: {cmd.execute_command(command_name, arguments)}"
+            # Print Assistant thoughts
+            reply = print_assistant_thoughts(assistant_reply)
 
-        # Check if there's a result from the command append it to the message history
-        self.full_message_history.append(chat.create_chat_message("system", result))
-        print_to_console("SYSTEM: ", Fore.YELLOW, result)
+            if not reply['thoughts']:
+                raise Exception('Error')
 
-        plans = []
-        if reply['plans']:
-            plans = [plan.replace('- ', '') for plan in reply['plans']]
+            # Get command name and arguments
+            command_name, arguments = cmd.get_command(assistant_reply)
+            result = f"Command {command_name} returned: {cmd.execute_command(command_name, arguments)}"
 
-        self.history = [History(
-            thoughts=reply['thoughts'],
-            reasoning=reply['reasoning'],
-            plans=plans,
-            criticism=reply['criticism'])] + self.history
+            # Check if there's a result from the command append it to the message history
+            self.full_message_history.append(chat.create_chat_message("system", result))
+            print_to_console("SYSTEM: ", Fore.YELLOW, result)
 
-        self.is_thinking = False
+            plans = []
+            if reply['plans']:
+                plans = [plan.replace('- ', '') for plan in reply['plans']]
+
+            self.history = [History(
+                thoughts=reply['thoughts'],
+                reasoning=reply['reasoning'],
+                plans=plans,
+                criticism=reply['criticism'])] + self.history
+        except Exception as e:
+            pc.window_alert(str(e))
+        finally:
+            self.is_thinking = False
 
 
 def header():
     return pc.vstack(
         pc.heading('스스로 생각하는 인공지능 Auto-GPT'),
         pc.divider(),
-        pc.list(items=[
-            pc.markdown('> 유튜브 [빵형의 개발도상국](https://www.youtube.com/@bbanghyong)'),
-            pc.markdown('> 창의적인 AI 솔루션 [더매트릭스](https://www.m47rix.com)'),
-        ]),
-        pc.list(items=[
-            '- 🌐 구글링을 통해 검색하고 정보를 수집하여 요약합니다',
-            '- 💾 장기 및 단기적으로 기억을 관리합니다',
-            '- 🧠 GPT-4의 뇌를 탑재하고 있습니다',
-            '- 🔗 인기있는 웹사이트 및 플랫폼에 접속하여 정보를 수집합니다',
-            '- 🗃️ GPT-3.5를 사용하여 자신의 생각을 요약하고 저장합니다',
-        ]),
+        pc.markdown('유튜브 [빵형의 개발도상국](https://www.youtube.com/@bbanghyong), 창의적인 AI 솔루션 [더매트릭스](https://www.m47rix.com)'),
+        pc.accordion(
+            items=[
+                ('기능',
+                pc.list(items=[
+                    '- 🌐 구글링을 통해 검색하고 정보를 수집하여 요약합니다',
+                    '- 💾 장기 및 단기적으로 기억을 관리합니다',
+                    '- 🧠 GPT-4의 뇌를 탑재하고 있습니다',
+                    '- 🔗 인기있는 웹사이트 및 플랫폼에 접속하여 정보를 수집합니다',
+                    '- 🗃️ GPT-3.5를 사용하여 자신의 생각을 요약하고 저장합니다',
+                ])),
+            ]
+        ),
         pc.divider(),
         pc.hstack(
             pc.text('AI 이름', width='100px'),
             pc.input(
                 placeholder='기업가-GPT',
-                default_value='기업가-GPT',
+                default_value='유튜버-GPT',
                 on_change=State.set_ai_name
             ),
         ),
@@ -225,7 +236,7 @@ def header():
             pc.text('최종 목표', width='100px', as_='b'),
             pc.input(
                 placeholder='자산 증식을 위한 사업을 자동으로 개발하고 운영한다.',
-                default_value='자산 증식을 위한 사업을 자동으로 개발하고 운영한다.',
+                default_value='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
                 on_change=State.set_ai_role
             ),
         ),
@@ -233,7 +244,7 @@ def header():
             pc.text('세부 목표 1', width='100px'),
             pc.input(
                 placeholder='기업 총 가치 높이기',
-                default_value='기업 총 가치 높이기',
+                default_value='월 광고 수익 200만원 달성',
                 on_change=State.set_ai_goals_0
             ),
         ),
@@ -241,7 +252,7 @@ def header():
             pc.text('세부 목표 2', width='100px'),
             pc.input(
                 placeholder='트위터 계정 팔로워 수 증가',
-                default_value='트위터 계정 팔로워 수 증가',
+                default_value='구독자 수 10만명 달성',
                 on_change=State.set_ai_goals_1
             ),
         ),
@@ -249,36 +260,44 @@ def header():
             pc.text('세부 목표 3', width='100px'),
             pc.input(
                 placeholder='다양한 비즈니스를 자동으로 개발하고 관리하기',
-                default_value='다양한 비즈니스를 자동으로 개발하고 관리하기',
+                default_value='영상 콘텐츠 주제 선정',
                 on_change=State.set_ai_goals_2
             ),
         ),
-        pc.cond(State.is_started,
-            pc.hstack(
+        pc.center(
+            pc.cond(State.is_started,
+                pc.text(),
                 pc.button(
-                    '계속 생각하기',
+                    '생각하기',
                     bg='black',
                     color='white',
                     width='6em',
                     padding='1em',
-                    on_click=State.cont,
-                ),
-                pc.button(
-                    '다시 생각하기',
-                    bg='red',
-                    color='white',
-                    width='6em',
-                    padding='1em',
-                    on_click=State.think,
+                    on_click=[State.processing, State.starting, State.think],
                 ),
             ),
-            pc.button(
-                '생각하기',
-                bg='black',
-                color='white',
-                width='6em',
-                padding='1em',
-                on_click=State.think,
+            pc.cond(State.is_started,
+                pc.cond(State.is_thinking,
+                    pc.text(),
+                    pc.hstack(
+                        pc.button(
+                            '계속 생각하기',
+                            bg='black',
+                            color='white',
+                            width='6em',
+                            padding='1em',
+                            on_click=[State.processing, State.cont],
+                        ),
+                        pc.button(
+                            '다시 생각하기',
+                            bg='red',
+                            color='white',
+                            width='6em',
+                            padding='1em',
+                            on_click=[State.processing, State.think],
+                        ),
+                    ),
+                )
             ),
         ),
         style=question_style,
@@ -293,16 +312,14 @@ def history_block(h: History):
                 pc.list_item(
                     pc.icon(tag='info_outline', color='green'),
                     ' ' + h.reasoning,
-                ),
-                None
+                )
             ),
             pc.ordered_list(items=h.plans),
             pc.cond(h.criticism,
                 pc.list_item(
                     pc.icon(tag='warning_two', color='red'),
                     ' ' + h.criticism
-                ),
-                None
+                )
             ),
             spacing='.25em',
         ),
@@ -331,7 +348,6 @@ def index():
                         'align_items': 'center',
                     },
                 ),
-                None
             ),
             pc.foreach(State.history, history_block),
             spacing='1em',
