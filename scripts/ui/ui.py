@@ -12,7 +12,7 @@ from json_parser import fix_and_parse_json
 import traceback
 from ai_config import AIConfig
 
-GPT4_MODE = False
+GPT4_MODE = True
 
 def print_to_console(
         title,
@@ -180,7 +180,7 @@ class State(pc.State):
                     self.user_input,
                     self.full_message_history,
                     mem.permanent_memory,
-                    cfg.smart_token_limit)
+                    cfg.fast_token_limit)
 
             # Print Assistant thoughts
             reply = print_assistant_thoughts(assistant_reply)
@@ -230,47 +230,51 @@ def header():
                 ])),
             ]
         ),
-        pc.divider(),
-        pc.hstack(
-            pc.text('AI 이름', width='100px'),
-            pc.input(
-                placeholder='기업가-GPT',
-                default_value='유튜버-GPT',
-                on_change=State.set_ai_name
-            ),
-        ),
-        pc.hstack(
-            pc.text('최종 목표', width='100px', as_='b'),
-            pc.input(
-                placeholder='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
-                default_value='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
-                on_change=State.set_ai_role
-            ),
-        ),
-        pc.hstack(
-            pc.text('세부 목표 1', width='100px'),
-            pc.input(
-                placeholder='기업 총 가치 높이기',
-                default_value='월 광고 수익 200만원 달성',
-                on_change=State.set_ai_goals_0
-            ),
-        ),
-        pc.hstack(
-            pc.text('세부 목표 2', width='100px'),
-            pc.input(
-                placeholder='트위터 계정 팔로워 수 증가',
-                default_value='채널 구독자 수 10만명 달성',
-                on_change=State.set_ai_goals_1
-            ),
-        ),
-        pc.hstack(
-            pc.text('세부 목표 3', width='100px'),
-            pc.input(
-                placeholder='다양한 비즈니스를 자동으로 개발하고 관리하기',
-                default_value='영상 콘텐츠 주제 선정',
-                on_change=State.set_ai_goals_2
-            ),
-        ),
+        # pc.divider(),
+        pc.accordion(items=[('목표 설정',
+            pc.stack(
+                pc.hstack(
+                    pc.text('AI 이름', width='100px'),
+                    pc.input(
+                        placeholder='기업가-GPT',
+                        default_value='유튜버-GPT',
+                        on_change=State.set_ai_name
+                    ),
+                ),
+                pc.hstack(
+                    pc.text('최종 목표', width='100px', as_='b'),
+                    pc.input(
+                        placeholder='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
+                        default_value='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
+                        on_change=State.set_ai_role
+                    ),
+                ),
+                pc.hstack(
+                    pc.text('세부 목표 1', width='100px'),
+                    pc.input(
+                        placeholder='기업 총 가치 높이기',
+                        default_value='월 광고 수익 200만원 달성',
+                        on_change=State.set_ai_goals_0
+                    ),
+                ),
+                pc.hstack(
+                    pc.text('세부 목표 2', width='100px'),
+                    pc.input(
+                        placeholder='트위터 계정 팔로워 수 증가',
+                        default_value='채널 구독자 수 10만명 달성',
+                        on_change=State.set_ai_goals_1
+                    ),
+                ),
+                pc.hstack(
+                    pc.text('세부 목표 3', width='100px'),
+                    pc.input(
+                        placeholder='다양한 비즈니스를 자동으로 개발하고 관리하기',
+                        default_value='영상 콘텐츠 주제 선정',
+                        on_change=State.set_ai_goals_2
+                    ),
+                ),
+            )
+        )]),
         pc.center(
             pc.cond(State.is_started,
                 pc.text(),
