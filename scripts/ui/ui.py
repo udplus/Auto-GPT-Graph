@@ -124,12 +124,12 @@ class State(pc.State):
     is_thinking = False
     is_started = False
 
-    ai_name: str = '기업가-GPT'
-    ai_role: str = '자산 증식을 위한 사업을 자동으로 개발하고 운영한다.'
+    ai_name: str = '유튜버-GPT'
+    ai_role: str = '유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.'
     ai_goals: list = [
-        '기업 총 가치 높이기',
-        '트위터 계정 팔로워 수 증가',
-        '다양한 비즈니스를 자동으로 개발하고 관리하기',
+        '월 광고 수익 200만원 달성',
+        '채널 구독자 수 10만명 달성',
+        '영상 콘텐츠 주제 선정',
     ]
 
     # Initialize variables
@@ -234,7 +234,7 @@ def header():
         pc.hstack(
             pc.text('최종 목표', width='100px', as_='b'),
             pc.input(
-                placeholder='자산 증식을 위한 사업을 자동으로 개발하고 운영한다.',
+                placeholder='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
                 default_value='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
                 on_change=State.set_ai_role
             ),
@@ -251,7 +251,7 @@ def header():
             pc.text('세부 목표 2', width='100px'),
             pc.input(
                 placeholder='트위터 계정 팔로워 수 증가',
-                default_value='구독자 수 10만명 달성',
+                default_value='채널 구독자 수 10만명 달성',
                 on_change=State.set_ai_goals_1
             ),
         ),
