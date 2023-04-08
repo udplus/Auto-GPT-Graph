@@ -110,6 +110,7 @@ question_style = {
 }
 
 cfg = Config()
+cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
 
 class History(pc.Base):
     thoughts: str
@@ -120,6 +121,9 @@ class History(pc.Base):
 
 class State(pc.State):
     history: list[History] = []
+
+    is_thinking = False
+    is_started = False
 
     ai_name: str = '기업가-GPT'
     ai_role: str = '자산 증식을 위한 사업을 자동으로 개발하고 운영한다.'
@@ -144,7 +148,11 @@ class State(pc.State):
         self.ai_goals[2] = goal
 
     def think(self):
-        cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+        self.is_started = True
+
+        self.history = []
+        self.full_message_history = []
+        self.result = None
 
         config = AIConfig(self.ai_name, self.ai_role, self.ai_goals)
         config.save()
@@ -156,6 +164,7 @@ class State(pc.State):
         self.cont()
 
     def cont(self):
+        self.is_thinking = True
         with Spinner("Thinking... "):
             assistant_reply = chat.chat_with_ai(
                 self.prompt,
@@ -184,6 +193,8 @@ class State(pc.State):
             reasoning=reply['reasoning'],
             plans=plans,
             criticism=reply['criticism'])] + self.history
+
+        self.is_thinking = False
 
 
 def header():
@@ -242,21 +253,33 @@ def header():
                 on_change=State.set_ai_goals_2
             ),
         ),
-        pc.button(
-            '생각하기',
-            bg='black',
-            color='white',
-            width='6em',
-            padding='1em',
-            on_click=State.think,
-        ),
-        pc.button(
-            '계속 생각하기',
-            bg='black',
-            color='white',
-            width='6em',
-            padding='1em',
-            on_click=State.cont,
+        pc.cond(State.is_started,
+            pc.hstack(
+                pc.button(
+                    '계속 생각하기',
+                    bg='black',
+                    color='white',
+                    width='6em',
+                    padding='1em',
+                    on_click=State.cont,
+                ),
+                pc.button(
+                    '다시 생각하기',
+                    bg='red',
+                    color='white',
+                    width='6em',
+                    padding='1em',
+                    on_click=State.think,
+                ),
+            ),
+            pc.button(
+                '생각하기',
+                bg='black',
+                color='white',
+                width='6em',
+                padding='1em',
+                on_click=State.think,
+            ),
         ),
         style=question_style,
     )
@@ -266,14 +289,20 @@ def history_block(h: History):
     return pc.vstack(
         pc.heading(h.thoughts, size='md'),
         pc.list(
-            pc.list_item(
-                pc.icon(tag='info_outline', color='green'),
-                ' ' + h.reasoning,
+            pc.cond(h.reasoning,
+                pc.list_item(
+                    pc.icon(tag='info_outline', color='green'),
+                    ' ' + h.reasoning,
+                ),
+                None
             ),
             pc.ordered_list(items=h.plans),
-            pc.list_item(
-                pc.icon(tag='warning_two', color='red'),
-                ' ' + h.criticism
+            pc.cond(h.criticism,
+                pc.list_item(
+                    pc.icon(tag='warning_two', color='red'),
+                    ' ' + h.criticism
+                ),
+                None
             ),
             spacing='.25em',
         ),
@@ -284,6 +313,26 @@ def index():
     return pc.center(
         pc.vstack(
             header(),
+            pc.cond(
+                State.is_thinking,
+                pc.vstack(
+                    pc.circular_progress(
+                        pc.circular_progress_label(
+                            'Thinking', color='rgb(0, 0, 0)'
+                        ),
+                        is_indeterminate=True,
+                        color='rgb(0, 0, 0)',
+                    ),
+                    style={
+                        'bg': 'white',
+                        'padding': '2em',
+                        'border_radius': '25px',
+                        'w': '100vh',
+                        'align_items': 'center',
+                    },
+                ),
+                None
+            ),
             pc.foreach(State.history, history_block),
             spacing='1em',
             width='100vh',
