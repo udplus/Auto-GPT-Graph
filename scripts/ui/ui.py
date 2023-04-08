@@ -109,7 +109,8 @@ question_style = {
 }
 
 cfg = Config()
-cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+# cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+# cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
 
 class History(pc.Base):
     thoughts: str
@@ -174,7 +175,7 @@ class State(pc.State):
                     self.user_input,
                     self.full_message_history,
                     mem.permanent_memory,
-                    cfg.fast_token_limit)
+                    cfg.smart_token_limit)
 
             # Print Assistant thoughts
             reply = print_assistant_thoughts(assistant_reply)
