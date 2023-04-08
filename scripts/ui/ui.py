@@ -121,6 +121,7 @@ class History(pc.Base):
     reasoning: str
     plans: list
     criticism: str
+    system: str
 
 
 class State(pc.State):
@@ -203,7 +204,9 @@ class State(pc.State):
                 thoughts=reply['thoughts'],
                 reasoning=reply['reasoning'],
                 plans=plans,
-                criticism=reply['criticism'])] + self.history
+                criticism=reply['criticism'],
+                system=result,
+            )] + self.history
         except Exception as e:
             pc.window_alert(str(e))
         finally:
@@ -324,6 +327,12 @@ def history_block(h: History):
                     pc.icon(tag='warning_two', color='red'),
                     ' ' + h.criticism
                 )
+            ),
+            pc.accordion(
+                items=[
+                    ('시스템',
+                    pc.code_block(h.system, wrap_long_lines=True)),
+                ]
             ),
             spacing='.25em',
         ),
