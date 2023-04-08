@@ -20,9 +20,6 @@ def print_to_console(
         speak_text=False,
         min_typing_speed=0,
         max_typing_speed=0):
-    global cfg
-    if speak_text and cfg.speak_mode:
-        speak.say_text(f"{title}. {content}")
     print(title_color + title + " " + Style.RESET_ALL, end="")
     if content:
         if isinstance(content, list):
@@ -40,7 +37,6 @@ def print_to_console(
     print()
 
 def print_assistant_thoughts(assistant_reply):
-    global cfg
     result = {}
 
     try:
@@ -93,9 +89,6 @@ def print_assistant_thoughts(assistant_reply):
         result['criticism'] = assistant_thoughts_criticism
 
         print_to_console("CRITICISM:", Fore.YELLOW, assistant_thoughts_criticism)
-        # Speak the assistant's thoughts
-        if cfg.speak_mode and assistant_thoughts_speak:
-            speak.say_text(assistant_thoughts_speak)
 
     except json.decoder.JSONDecodeError:
         print_to_console("Error: Invalid JSON\n", Fore.RED, assistant_reply)
