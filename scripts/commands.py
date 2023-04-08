@@ -207,7 +207,7 @@ def overwrite_memory(key, string):
 
 def shutdown():
     print("Shutting down...")
-    quit()
+    # quit()
 
 
 def start_agent(name, task, prompt, model=cfg.fast_llm_model):

@@ -211,6 +211,7 @@ class State(pc.State):
             pc.window_alert(str(e))
         finally:
             self.is_thinking = False
+            print_to_console("DONE!", Fore.CYAN, '')
 
 
 def header():
