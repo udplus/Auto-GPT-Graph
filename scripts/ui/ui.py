@@ -12,6 +12,10 @@ from json_parser import fix_and_parse_json
 import traceback
 from ai_config import AIConfig
 
+cfg = Config()
+cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
+
 def print_to_console(
         title,
         title_color,
@@ -107,10 +111,6 @@ question_style = {
     'w': '100%',
     'align_items': 'left',
 }
-
-cfg = Config()
-cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
-cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
 
 class History(pc.Base):
     thoughts: str
