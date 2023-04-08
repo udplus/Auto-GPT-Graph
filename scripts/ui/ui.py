@@ -109,8 +109,8 @@ question_style = {
 }
 
 cfg = Config()
-# cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
-# cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
+cfg.set_smart_llm_model(cfg.fast_llm_model) # GPT-3.5
+cfg.set_smart_token_limit(cfg.fast_token_limit) # GPT-3.5
 
 class History(pc.Base):
     thoughts: str
@@ -289,7 +289,7 @@ def header():
                             on_click=[State.processing, State.cont],
                         ),
                         pc.button(
-                            '다시 생각하기',
+                            '처음부터',
                             bg='red',
                             color='white',
                             width='6em',
