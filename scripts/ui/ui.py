@@ -12,7 +12,7 @@ from json_parser import fix_and_parse_json
 import traceback
 from ai_config import AIConfig
 
-GPT4_MODE = True
+GPT4_MODE = False
 
 def print_to_console(
         title,
@@ -25,16 +25,17 @@ def print_to_console(
     if content:
         if isinstance(content, list):
             content = " ".join(content)
-        words = content.split()
-        for i, word in enumerate(words):
-            print(word, end="", flush=True)
-            if i < len(words) - 1:
-                print(" ", end="", flush=True)
-            typing_speed = random.uniform(min_typing_speed, max_typing_speed)
-            time.sleep(typing_speed)
-            # type faster after each word
-            min_typing_speed = min_typing_speed * 0.95
-            max_typing_speed = max_typing_speed * 0.95
+        print(content, end='')
+        # words = content.split()
+        # for i, word in enumerate(words):
+        #     print(word, end="", flush=True)
+        #     if i < len(words) - 1:
+        #         print(" ", end="", flush=True)
+        #     typing_speed = random.uniform(min_typing_speed, max_typing_speed)
+        #     time.sleep(typing_speed)
+        #     # type faster after each word
+        #     min_typing_speed = min_typing_speed * 0.95
+        #     max_typing_speed = max_typing_speed * 0.95
     print()
 
 def print_assistant_thoughts(assistant_reply):
