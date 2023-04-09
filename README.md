@@ -1,4 +1,33 @@
 # Auto-GPT: An Autonomous GPT-4 Experiment
+
+## Pynecone UI
+
+<video src="https://user-images.githubusercontent.com/5242555/230748261-5584dc37-88e0-4ecc-ab4c-90c7491f19af.mp4" controls></video>
+
+### Run
+
+```
+git clone https://github.com/kairess/Auto-GPT-Graph
+cd Auto-GPT-Graph
+pip install -r requirements.txt
+pc init
+pc run
+```
+
+## Knowledge Graph
+
+d3.js Force-directed graph
+
+<video src="https://user-images.githubusercontent.com/5242555/230748355-7ef6562c-511d-4408-8ef4-ba08e273dfb2.mp4" controls></video>
+
+### Run
+
+```
+python scripts/graph_ui.py
+```
+
+---
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/Torantulino/auto-gpt?style=social)
 ![Twitter Follow](https://img.shields.io/twitter/follow/siggravitas?style=social)
 [![](https://dcbadge.vercel.app/api/server/PQ7VX6TY4t?style=flat)](https://discord.gg/PQ7VX6TY4t)

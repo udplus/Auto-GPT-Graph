@@ -11,3 +11,4 @@ gTTS==2.3.1
 docker
 duckduckgo-search
 google-api-python-client #(https://developers.google.com/custom-search/v1/overview) 
+pynecone==0.1.21
