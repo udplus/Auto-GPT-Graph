@@ -174,6 +174,8 @@ class State(pc.State):
         self.is_thinking = True
 
     def cont(self):
+        start_time = time.time()
+
         try:
             with Spinner("Thinking... "):
                 assistant_reply = chat.chat_with_ai(
@@ -212,7 +214,7 @@ class State(pc.State):
             pc.window_alert(str(e))
         finally:
             self.is_thinking = False
-            print_to_console("DONE!", Fore.CYAN, '')
+            print_to_console("DONE!", Fore.CYAN, f' in {(time.time() - start_time):.2f}s.')
 
 
 def header():
