@@ -62,6 +62,7 @@ class Config(metaclass=Singleton):
 
     def set_openai_api_key(self, value: str):
         self.openai_api_key = value
+        openai.api_key = value
     
     def set_elevenlabs_api_key(self, value: str):
         self.elevenlabs_api_key = value

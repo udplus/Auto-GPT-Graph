@@ -143,6 +143,7 @@ class State(pc.State):
     full_message_history:list = []
     result: str = None
     prompt: str = None
+    openai_api_key = ''
     # Make a constant:
     user_input: str = "Determine which next command to use, and respond using the format specified above:"
 
@@ -152,6 +153,11 @@ class State(pc.State):
         self.ai_goals[1] = goal
     def set_ai_goals_2(self, goal):
         self.ai_goals[2] = goal
+
+    def set_openai_api_key(self, key):
+        if key:
+            self.openai_api_key = key
+            cfg.set_openai_api_key(key)
 
     def think(self):
         self.history = []
@@ -238,7 +244,7 @@ def header():
         pc.accordion(items=[('목표 설정',
             pc.stack(
                 pc.hstack(
-                    pc.text('AI 이름', width='100px'),
+                    pc.text('AI 이름', width='150px'),
                     pc.input(
                         placeholder='기업가-GPT',
                         default_value='유튜버-GPT',
@@ -246,7 +252,7 @@ def header():
                     ),
                 ),
                 pc.hstack(
-                    pc.text('최종 목표', width='100px', as_='b'),
+                    pc.text('최종 목표', width='150px', as_='b'),
                     pc.input(
                         placeholder='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
                         default_value='유튜브 채널을 운영하고 영상 콘텐츠를 통해 수익을 창출하는 인공지능입니다.',
@@ -254,7 +260,7 @@ def header():
                     ),
                 ),
                 pc.hstack(
-                    pc.text('세부 목표 1', width='100px'),
+                    pc.text('세부 목표 1', width='150px'),
                     pc.input(
                         placeholder='기업 총 가치 높이기',
                         default_value='월 광고 수익 200만원 달성',
@@ -262,7 +268,7 @@ def header():
                     ),
                 ),
                 pc.hstack(
-                    pc.text('세부 목표 2', width='100px'),
+                    pc.text('세부 목표 2', width='150px'),
                     pc.input(
                         placeholder='트위터 계정 팔로워 수 증가',
                         default_value='채널 구독자 수 10만명 달성',
@@ -270,11 +276,19 @@ def header():
                     ),
                 ),
                 pc.hstack(
-                    pc.text('세부 목표 3', width='100px'),
+                    pc.text('세부 목표 3', width='150px'),
                     pc.input(
                         placeholder='다양한 비즈니스를 자동으로 개발하고 관리하기',
                         default_value='영상 콘텐츠 주제 선정',
                         on_change=State.set_ai_goals_2
+                    ),
+                ),
+                pc.hstack(
+                    pc.text('OpenAI API Key', width='150px'),
+                    pc.input(
+                        placeholder='sk-...',
+                        default_value=State.openai_api_key,
+                        on_change=State.set_openai_api_key
                     ),
                 ),
             )
