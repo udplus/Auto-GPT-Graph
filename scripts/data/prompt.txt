@@ -51,10 +51,10 @@ RESPONSE FORMAT:
     },
     "thoughts":
     {
-        "text": "thought",
-        "reasoning": "reasoning",
-        "plan": "- short bulleted\n- list that conveys\n- long-term plan",
-        "criticism": "constructive self-criticism",
+        "text": "thought, 한국어 번역 필요",
+        "reasoning": "reasoning, 한국어 번역 필요",
+        "plan": "- short bulleted\n- list that conveys\n- long-term plan\n - 한국어 번역 필요",
+        "criticism": "constructive self-criticism, 한국어 번역 필요",
         "speak": "thoughts summary to say to user"
     }
 }
